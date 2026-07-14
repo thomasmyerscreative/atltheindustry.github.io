@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ATL Industry Job Board — Coming Soon</title>
+  <title>ATL Industry Job Board | Coming Soon</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -244,14 +244,12 @@
       text-align: center;
     }
 
-    .success-box .check { font-size: 2.5rem; margin-bottom: 12px; }
-
     .success-box h3 {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1.8rem;
       letter-spacing: 0.08em;
       color: var(--red);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .success-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
@@ -474,7 +472,7 @@
 
   <nav>
     <span class="nav-logo">@ATLtheINDUSTRY</span>
-    <span class="nav-tag">Job Board — Coming Soon</span>
+    <span class="nav-tag">Job Board | Launching This Summer</span>
   </nav>
 
   <section class="hero">
@@ -487,9 +485,9 @@
 
     <div class="signup-wrap">
       <div class="role-select">
-        <button class="role-btn active" onclick="setRole(this, 'Job Seeker')">🍸 Looking for Work</button>
-        <button class="role-btn" onclick="setRole(this, 'Employer')">🏪 Hiring Staff</button>
-        <button class="role-btn" onclick="setRole(this, 'Both')">🤝 Both</button>
+        <button class="role-btn active" onclick="setRole(this, 'Job Seeker')">Looking for Work</button>
+        <button class="role-btn" onclick="setRole(this, 'Employer')">Hiring Staff</button>
+        <button class="role-btn" onclick="setRole(this, 'Both')">Both</button>
       </div>
 
       <div id="signup-form">
@@ -522,9 +520,8 @@
       </div>
 
       <div class="success-box" id="success-box">
-        <div class="check">🥃</div>
-        <h3>You're In, Fam.</h3>
-        <p>Welcome to the ATL Industry family. You'll be among the first to know when we launch. Tell your crew — the more of us, the better.</p>
+        <h3 id="success-title">You're On The List.</h3>
+        <p id="success-copy">Welcome to ATL the INDUSTRY. You'll be among the first to know when we launch.</p>
       </div>
     </div>
   </section>
@@ -563,12 +560,12 @@
       <div class="card">
         <span class="card-icon">📍</span>
         <h3>Atlanta First</h3>
-        <p>Starting right here at home — then going national. Every venue, every role, every corner of ATL's hospitality scene. One place.</p>
+        <p>Built for this city and nowhere else. Every venue, every role, every corner of ATL's hospitality scene. One place.</p>
       </div>
       <div class="card">
         <span class="card-icon">🏃</span>
         <h3>Fast Connections</h3>
-        <p>Bartenders, servers, and managers don't browse job boards all day. This platform is built for speed — fast posts, fast responses, fast hires.</p>
+        <p>Bartenders, servers, and managers don't browse job boards all day. This platform is built for speed. Fast posts, fast responses, fast hires.</p>
       </div>
     </div>
   </section>
@@ -591,7 +588,7 @@
           <li>Post jobs directly to Atlanta's hospitality workforce</li>
           <li>Fill last-minute shift gaps fast without blowing up your group chat</li>
           <li>Find pre-vetted candidates who understand the industry</li>
-          <li>List your venue on Atlanta's premier hospitality community platform</li>
+          <li>Put your venue in front of Atlanta hospitality workers who already know this city</li>
           <li>Build your employer brand with the people who actually work in the industry</li>
         </ul>
       </div>
@@ -601,16 +598,23 @@
   <section class="footer-cta fade-in">
     <h2>Get In Early.<br>Tell Your People.</h2>
     <p>Share this page with everyone you know in the industry. The bigger we are at launch, the better it works for all of us.</p>
-    <button class="submit-btn" onclick="document.querySelector('.hero').scrollIntoView({behavior:'smooth'})">SIGN UP NOW — IT'S FREE</button>
+    <button class="submit-btn" onclick="document.querySelector('.hero').scrollIntoView({behavior:'smooth'})">SIGN UP NOW. IT'S FREE.</button>
   </section>
 
   <footer>
     <span class="logo">@ATLtheINDUSTRY</span>
-    <p>© 2026 ATL Industry — <a href="https://www.instagram.com/atltheindustry" target="_blank">Instagram</a></p>
+    <p>© 2026 ATL Industry Creative LLC | <a href="https://www.instagram.com/atltheindustry" target="_blank">Instagram</a></p>
     <p>Built in Atlanta. For Atlanta.</p>
   </footer>
 
   <script>
+    // ─────────────────────────────────────────────
+    // WAITLIST COUNT
+    // Update this number as the real waitlist grows.
+    // This is the only number you need to change.
+    // ─────────────────────────────────────────────
+    const WAITLIST_COUNT = 150;
+
     let selectedRole = 'Job Seeker';
     function setRole(btn, role) {
       document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
@@ -618,24 +622,38 @@
       selectedRole = role;
     }
 
-    let signupCount = parseInt(localStorage.getItem('atl_signups') || '47');
-
     function updateCounter() {
       const el = document.getElementById('count-signups');
       let current = 0;
-      const step = Math.ceil(signupCount / 60);
+      const step = Math.ceil(WAITLIST_COUNT / 60);
       const timer = setInterval(() => {
-        current = Math.min(current + step, signupCount);
-        el.textContent = current;
-        if (current >= signupCount) clearInterval(timer);
+        current = Math.min(current + step, WAITLIST_COUNT);
+        el.textContent = current + '+';
+        if (current >= WAITLIST_COUNT) clearInterval(timer);
       }, 20);
+    }
+
+    function showSuccess(role) {
+      const title = document.getElementById('success-title');
+      const copy  = document.getElementById('success-copy');
+
+      if (role === 'Employer' || role === 'Both') {
+        title.textContent = "Your Venue Is On The List.";
+        copy.textContent  = "Thank you for joining. Waitlist venues get first access when we launch, and we will reach out personally before we go live.";
+      } else {
+        title.textContent = "You're On The List.";
+        copy.textContent  = "Welcome to ATL the INDUSTRY. Waitlist members get first access when we launch, and you'll hear from us before anyone else.";
+      }
+
+      document.getElementById('signup-form').style.display = 'none';
+      document.getElementById('success-box').style.display = 'block';
     }
 
     async function handleSubmit() {
       const first = document.getElementById('firstName').value.trim();
-      const last = document.getElementById('lastName').value.trim();
+      const last  = document.getElementById('lastName').value.trim();
       const email = document.getElementById('email').value.trim();
-      const role = document.getElementById('jobType').value;
+      const role  = document.getElementById('jobType').value;
 
       if (!first || !email || !role) {
         alert('Please fill in your first name, email, and role to join the waitlist.');
@@ -654,11 +672,7 @@
         });
 
         if (response.ok) {
-          signupCount++;
-          localStorage.setItem('atl_signups', signupCount);
-          document.getElementById('count-signups').textContent = signupCount;
-          document.getElementById('signup-form').style.display = 'none';
-          document.getElementById('success-box').style.display = 'block';
+          showSuccess(selectedRole);
         } else {
           alert('Something went wrong. Please try again.');
         }
