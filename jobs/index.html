@@ -199,6 +199,9 @@
       -webkit-appearance: none;
     }
 
+    #business-row { display: none; }
+    #business-row.show { display: flex; }
+
     input::placeholder { color: #555; }
     input:focus, select:focus { border-color: var(--red); }
     select option { background: var(--dark); }
@@ -498,6 +501,9 @@
         <div class="form-row">
           <input type="email" id="email" placeholder="Email Address" />
         </div>
+        <div class="form-row" id="business-row">
+          <input type="text" id="businessName" placeholder="Venue or Business Name" />
+        </div>
         <div class="form-row">
           <select id="jobType">
             <option value="" disabled selected>Your Role in the Industry</option>
@@ -613,13 +619,25 @@
     // Update this number as the real waitlist grows.
     // This is the only number you need to change.
     // ─────────────────────────────────────────────
-    const WAITLIST_COUNT = 250;
+    const WAITLIST_COUNT = 300;
 
     let selectedRole = 'Job Seeker';
     function setRole(btn, role) {
       document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedRole = role;
+
+      const bizRow = document.getElementById('business-row');
+      const bizInput = document.getElementById('businessName');
+      if (role === 'Employer') {
+        bizRow.classList.add('show');
+        bizInput.placeholder = 'Venue or Business Name';
+      } else if (role === 'Both') {
+        bizRow.classList.add('show');
+        bizInput.placeholder = 'Venue or Business Name (if hiring)';
+      } else {
+        bizRow.classList.remove('show');
+      }
     }
 
     function updateCounter() {
@@ -654,6 +672,7 @@
       const last  = document.getElementById('lastName').value.trim();
       const email = document.getElementById('email').value.trim();
       const role  = document.getElementById('jobType').value;
+      const business = document.getElementById('businessName').value.trim();
 
       if (!first || !email || !role) {
         alert('Please fill in your first name, email, and role to join the waitlist.');
@@ -663,12 +682,23 @@
         alert('Please enter a valid email address.');
         return;
       }
+      if (selectedRole === 'Employer' && !business) {
+        alert('Please enter your venue or business name.');
+        return;
+      }
 
       try {
         const response = await fetch('https://formspree.io/f/mnjbweok', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ firstName: first, lastName: last, email, role, type: selectedRole })
+          body: JSON.stringify({
+            firstName: first,
+            lastName: last,
+            email,
+            role,
+            type: selectedRole,
+            businessName: selectedRole === 'Job Seeker' ? '' : business
+          })
         });
 
         if (response.ok) {
